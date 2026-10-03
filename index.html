@@ -5,22 +5,6 @@
 
   <meta charset="UTF-8">
 
-  <script>
-    // IFDDO iOS bypass (2026-10-02): iOS Safari misplaces taps inside a
-    // fullscreen iframe (hit-test offset). Send iPhones/iPads straight to
-    // the app URL instead of framing it. Query params are forwarded so
-    // future deep links (e.g. QR codes) keep working.
-    (function () {
-      var ua = navigator.userAgent || "";
-      var isIOS = /iPad|iPhone|iPod/.test(ua) ||
-        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      if (isIOS) {
-        var execUrl = "https://script.google.com/macros/s/AKfycbwEN1Ga3BqWCNPFQ7vVzeoHBfOtP5fyF-xAgiFmNPapX4g73w4TlYWCv-E9XkVNrMEnWA/exec";
-        window.location.replace(execUrl + window.location.search);
-      }
-    })();
-  </script>
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
