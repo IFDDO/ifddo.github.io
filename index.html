@@ -195,6 +195,8 @@
 
   <script>
 
+    var IFDDO_WRAPPER_TOKEN_KEY = "IFDDO_REMEMBER_TOKEN";
+
     function hideLoadingScreen() {
 
       window.setTimeout(
@@ -214,6 +216,35 @@
       );
 
     }
+
+    // Remember-me bridge: hold the token in the wrapper's own
+    // localStorage (first-party) so iOS Safari ITP can't wipe it
+    // out from inside the Apps Script iframe.
+    window.addEventListener("message", function(event) {
+      var data = event.data;
+      if (!data || typeof data.type !== "string") return;
+
+      var iframe = document.getElementById("ifddoPortal");
+
+      if (data.type === "IFDDO_GET_REMEMBER_TOKEN") {
+        var token = null;
+        try { token = localStorage.getItem(IFDDO_WRAPPER_TOKEN_KEY); }
+        catch (e) {}
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage(
+            { type: "IFDDO_REMEMBER_TOKEN", token: token },
+            "*"
+          );
+        }
+      }
+
+      if (data.type === "IFDDO_SET_REMEMBER_TOKEN") {
+        try {
+          if (data.token) localStorage.setItem(IFDDO_WRAPPER_TOKEN_KEY, data.token);
+          else localStorage.removeItem(IFDDO_WRAPPER_TOKEN_KEY);
+        } catch (e) {}
+      }
+    });
 
   </script>
 
